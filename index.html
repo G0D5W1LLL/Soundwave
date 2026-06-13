@@ -1,0 +1,1236 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SoundWave – Music for Everyone</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+/* ─── CSS VARIABLES ──────────────────────────────────────────── */
+:root {
+  --accent: #1DF28A;
+  --accent2: #FF5DCD;
+  --accent3: #5D9BFF;
+  --radius: 14px;
+  --transition: .22s cubic-bezier(.4,0,.2,1);
+  --font-display: 'Syne', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
+}
+[data-theme="dark"] {
+  --bg: #0A0A0F;
+  --bg2: #111118;
+  --bg3: #1A1A24;
+  --bg4: #22222F;
+  --border: rgba(255,255,255,.08);
+  --text: #F0F0F5;
+  --text2: #9090A8;
+  --text3: #5A5A70;
+  --card: #13131C;
+  --sidebar: #0D0D14;
+  --player: #0F0F17;
+  --shadow: 0 8px 40px rgba(0,0,0,.6);
+}
+[data-theme="light"] {
+  --bg: #F4F4F8;
+  --bg2: #FFFFFF;
+  --bg3: #EBEBF2;
+  --bg4: #E0E0EA;
+  --border: rgba(0,0,0,.08);
+  --text: #0D0D18;
+  --text2: #5A5A72;
+  --text3: #9A9AB0;
+  --card: #FFFFFF;
+  --sidebar: #FFFFFF;
+  --player: #FFFFFF;
+  --shadow: 0 8px 40px rgba(0,0,0,.12);
+}
+
+/* ─── RESET ──────────────────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-body);background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;transition:background var(--transition),color var(--transition)}
+button{cursor:pointer;border:none;outline:none;font-family:inherit}
+input{font-family:inherit;outline:none}
+a{text-decoration:none;color:inherit}
+img{display:block;max-width:100%}
+ul{list-style:none}
+
+/* ─── PAGES ──────────────────────────────────────────────────── */
+.page{display:none;min-height:100vh}
+.page.active{display:flex}
+
+/* ═══════════════════════════════════════════════════════════════
+   LOGIN PAGE
+═══════════════════════════════════════════════════════════════ */
+#page-login{
+  align-items:stretch;
+  background:var(--bg);
+  position:relative;
+  overflow:hidden;
+}
+.login-art{
+  flex:1;
+  position:relative;
+  background:linear-gradient(135deg,#0e0e1a 0%,#12122a 50%,#0e1e14 100%);
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+}
+.login-art-inner{
+  position:relative;z-index:2;text-align:center;padding:40px;
+}
+.login-art .big-logo{
+  font-family:var(--font-display);
+  font-size:72px;font-weight:800;
+  background:linear-gradient(135deg,var(--accent),var(--accent3));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  line-height:1;margin-bottom:16px;
+}
+.login-art .tagline{font-size:18px;color:rgba(255,255,255,.5);font-weight:300;letter-spacing:.04em}
+.orbs{position:absolute;inset:0;pointer-events:none}
+.orb{position:absolute;border-radius:50%;filter:blur(80px);opacity:.25;animation:float 8s ease-in-out infinite}
+.orb:nth-child(1){width:400px;height:400px;background:var(--accent);top:-100px;left:-100px;animation-delay:0s}
+.orb:nth-child(2){width:300px;height:300px;background:var(--accent2);bottom:-50px;right:-80px;animation-delay:3s}
+.orb:nth-child(3){width:200px;height:200px;background:var(--accent3);top:50%;left:40%;animation-delay:5s}
+@keyframes float{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-30px) scale(1.05)}}
+
+.login-form-wrap{
+  width:460px;background:var(--bg2);
+  display:flex;flex-direction:column;justify-content:center;
+  padding:60px 50px;border-left:1px solid var(--border);
+}
+.login-form-wrap h2{font-family:var(--font-display);font-size:32px;font-weight:700;margin-bottom:6px}
+.login-form-wrap .sub{color:var(--text2);font-size:14px;margin-bottom:36px}
+.social-btn{
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  width:100%;padding:13px;border-radius:var(--radius);
+  border:1.5px solid var(--border);background:transparent;
+  color:var(--text);font-size:14px;font-weight:500;
+  transition:border-color var(--transition),background var(--transition);margin-bottom:10px;
+}
+.social-btn:hover{border-color:var(--accent);background:rgba(29,242,138,.05)}
+.social-icon{width:20px;height:20px;object-fit:contain}
+.divider{display:flex;align-items:center;gap:14px;color:var(--text3);font-size:12px;margin:20px 0}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border)}
+.field{margin-bottom:16px}
+.field label{display:block;font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:7px}
+.field input{
+  width:100%;padding:13px 16px;background:var(--bg3);
+  border:1.5px solid var(--border);border-radius:var(--radius);
+  color:var(--text);font-size:14px;
+  transition:border-color var(--transition),background var(--transition);
+}
+.field input:focus{border-color:var(--accent);background:var(--bg4)}
+.btn-primary{
+  width:100%;padding:14px;background:var(--accent);color:#000;
+  border-radius:var(--radius);font-size:15px;font-weight:700;
+  font-family:var(--font-display);letter-spacing:.02em;
+  transition:opacity var(--transition),transform var(--transition);margin-top:8px;
+}
+.btn-primary:hover{opacity:.88;transform:translateY(-1px)}
+.btn-primary:active{transform:translateY(0)}
+.login-footer{margin-top:28px;text-align:center;font-size:13px;color:var(--text2)}
+.login-footer a{color:var(--accent);font-weight:600}
+.login-footer a:hover{text-decoration:underline}
+
+/* ═══════════════════════════════════════════════════════════════
+   MAIN APP SHELL
+═══════════════════════════════════════════════════════════════ */
+#page-app{flex-direction:column}
+.app-wrap{display:flex;flex:1;height:calc(100vh - 90px);overflow:hidden}
+
+/* ─── SIDEBAR ───────────────────────────────────────────────── */
+.sidebar{
+  width:240px;flex-shrink:0;background:var(--sidebar);
+  border-right:1px solid var(--border);
+  display:flex;flex-direction:column;
+  padding:20px 0;overflow-y:auto;
+  transition:background var(--transition);
+}
+.sidebar-logo{
+  font-family:var(--font-display);font-size:22px;font-weight:800;
+  padding:0 22px 24px;
+  background:linear-gradient(90deg,var(--accent),var(--accent3));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.nav-section{margin-bottom:28px}
+.nav-label{
+  font-size:10px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.1em;color:var(--text3);padding:0 22px;margin-bottom:8px;
+}
+.nav-item{
+  display:flex;align-items:center;gap:12px;
+  padding:10px 22px;cursor:pointer;border-radius:0;
+  font-size:14px;font-weight:500;color:var(--text2);
+  transition:color var(--transition),background var(--transition);
+  border-left:3px solid transparent;
+}
+.nav-item:hover{color:var(--text);background:var(--bg3)}
+.nav-item.active{color:var(--accent);border-left-color:var(--accent);background:rgba(29,242,138,.07)}
+.nav-icon{font-size:18px;width:22px;text-align:center}
+
+.playlist-item{
+  display:flex;align-items:center;gap:10px;
+  padding:9px 22px;cursor:pointer;
+  font-size:13px;color:var(--text2);
+  transition:color var(--transition);
+}
+.playlist-item:hover{color:var(--text)}
+.playlist-thumb{
+  width:36px;height:36px;border-radius:6px;flex-shrink:0;
+  background:var(--bg3);overflow:hidden;
+  display:flex;align-items:center;justify-content:center;font-size:16px;
+}
+.playlist-info .p-name{font-size:13px;font-weight:500;line-height:1.3}
+.playlist-info .p-count{font-size:11px;color:var(--text3);margin-top:1px}
+
+/* ─── MAIN CONTENT ──────────────────────────────────────────── */
+.main-content{
+  flex:1;overflow-y:auto;background:var(--bg);
+  transition:background var(--transition);
+}
+.view{display:none;padding:32px}
+.view.active{display:block}
+
+/* ─── TOPBAR ────────────────────────────────────────────────── */
+.topbar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 32px;background:var(--bg2);
+  border-bottom:1px solid var(--border);
+  position:sticky;top:0;z-index:10;
+  transition:background var(--transition);
+}
+.topbar-left{display:flex;align-items:center;gap:10px}
+.nav-arrows{display:flex;gap:4px}
+.arrow-btn{
+  width:32px;height:32px;border-radius:50%;background:var(--bg3);
+  display:flex;align-items:center;justify-content:center;
+  font-size:15px;color:var(--text2);cursor:pointer;
+  transition:background var(--transition),color var(--transition);
+}
+.arrow-btn:hover{background:var(--bg4);color:var(--text)}
+.search-bar{
+  display:flex;align-items:center;gap:8px;
+  background:var(--bg3);border:1.5px solid var(--border);
+  border-radius:999px;padding:8px 16px;width:260px;
+  transition:border-color var(--transition);
+}
+.search-bar:focus-within{border-color:var(--accent)}
+.search-bar input{background:none;border:none;color:var(--text);font-size:14px;flex:1}
+.search-bar input::placeholder{color:var(--text3)}
+.topbar-right{display:flex;align-items:center;gap:12px}
+.theme-toggle{
+  width:36px;height:36px;border-radius:50%;background:var(--bg3);
+  display:flex;align-items:center;justify-content:center;
+  font-size:17px;cursor:pointer;border:1.5px solid var(--border);
+  transition:background var(--transition),transform .3s;
+}
+.theme-toggle:hover{transform:rotate(20deg);background:var(--bg4)}
+.upgrade-btn{
+  padding:8px 18px;background:var(--accent);color:#000;
+  border-radius:999px;font-size:13px;font-weight:700;
+  transition:opacity var(--transition);
+}
+.upgrade-btn:hover{opacity:.85}
+.avatar{
+  width:36px;height:36px;border-radius:50%;
+  background:linear-gradient(135deg,var(--accent),var(--accent3));
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;font-weight:700;color:#000;cursor:pointer;
+  border:2px solid var(--border);transition:border-color var(--transition);
+}
+.avatar:hover{border-color:var(--accent)}
+
+/* ─── PLAYER BAR ────────────────────────────────────────────── */
+.player-bar{
+  height:90px;background:var(--player);border-top:1px solid var(--border);
+  display:flex;align-items:center;padding:0 28px;gap:20px;
+  position:sticky;bottom:0;z-index:20;
+  transition:background var(--transition);
+}
+.now-playing{display:flex;align-items:center;gap:14px;flex:1;min-width:0}
+.np-thumb{
+  width:54px;height:54px;border-radius:10px;flex-shrink:0;
+  background:linear-gradient(135deg,#1DF28A22,#5D9BFF22);
+  border:1px solid var(--border);display:flex;align-items:center;
+  justify-content:center;font-size:22px;overflow:hidden;
+}
+.np-info{min-width:0}
+.np-title{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.np-artist{font-size:12px;color:var(--text2);margin-top:2px}
+.np-heart{font-size:18px;cursor:pointer;color:var(--text3);transition:color var(--transition);padding:0 4px}
+.np-heart:hover{color:var(--accent2)}
+.np-heart.liked{color:var(--accent2)}
+
+.player-controls{display:flex;flex-direction:column;align-items:center;gap:8px;flex:2}
+.ctrl-btns{display:flex;align-items:center;gap:14px}
+.ctrl-btn{
+  background:none;color:var(--text2);font-size:18px;
+  transition:color var(--transition),transform var(--transition);width:32px;height:32px;
+  display:flex;align-items:center;justify-content:center;border-radius:50%;
+}
+.ctrl-btn:hover{color:var(--text);transform:scale(1.1)}
+.ctrl-btn.active{color:var(--accent)}
+.play-btn{
+  width:44px;height:44px;border-radius:50%;background:var(--text);
+  color:var(--bg);font-size:18px;display:flex;align-items:center;justify-content:center;
+  transition:background var(--transition),transform var(--transition);
+}
+.play-btn:hover{transform:scale(1.06);background:var(--accent)}
+.progress-wrap{display:flex;align-items:center;gap:10px;width:100%}
+.time{font-size:11px;color:var(--text3);font-variant-numeric:tabular-nums;white-space:nowrap}
+.progress-track{
+  flex:1;height:4px;background:var(--bg3);border-radius:2px;
+  cursor:pointer;position:relative;overflow:hidden;
+}
+.progress-fill{
+  height:100%;background:var(--accent);border-radius:2px;width:35%;
+  transition:width .3s;
+}
+.progress-track:hover .progress-fill{background:var(--accent)}
+
+.player-extra{display:flex;align-items:center;gap:10px;flex:1;justify-content:flex-end}
+.vol-icon{font-size:17px;color:var(--text2)}
+.vol-track{width:80px;height:4px;background:var(--bg3);border-radius:2px;cursor:pointer;position:relative;overflow:hidden}
+.vol-fill{height:100%;background:var(--text2);border-radius:2px;width:70%}
+
+/* ─── SECTION HEADINGS ──────────────────────────────────────── */
+.section-head{
+  display:flex;align-items:baseline;justify-content:space-between;
+  margin-bottom:20px;
+}
+.section-head h2{font-family:var(--font-display);font-size:22px;font-weight:700}
+.see-all{font-size:12px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;cursor:pointer;transition:color var(--transition)}
+.see-all:hover{color:var(--accent)}
+
+/* ─── CARD GRID ─────────────────────────────────────────────── */
+.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:18px;margin-bottom:36px}
+.card{
+  background:var(--card);border-radius:var(--radius);padding:14px;
+  cursor:pointer;transition:background var(--transition),transform var(--transition),box-shadow var(--transition);
+  border:1px solid var(--border);
+}
+.card:hover{background:var(--bg3);transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,.3)}
+.card-thumb{
+  width:100%;aspect-ratio:1;border-radius:10px;margin-bottom:12px;
+  overflow:hidden;display:flex;align-items:center;justify-content:center;
+  font-size:36px;position:relative;
+}
+.card-title{font-size:14px;font-weight:600;margin-bottom:4px;line-height:1.3;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card-sub{font-size:12px;color:var(--text2)}
+.card-play-overlay{
+  position:absolute;bottom:8px;right:8px;
+  width:36px;height:36px;border-radius:50%;
+  background:var(--accent);color:#000;
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;opacity:0;transition:opacity var(--transition),transform var(--transition);
+  box-shadow:0 4px 16px rgba(29,242,138,.4);
+}
+.card:hover .card-play-overlay{opacity:1;transform:translateY(-2px)}
+
+/* ─── HERO BANNER ───────────────────────────────────────────── */
+.hero-banner{
+  border-radius:20px;padding:40px;margin-bottom:36px;
+  background:linear-gradient(135deg,#0d2e1a 0%,#0a1a2e 50%,#1a0d2e 100%);
+  border:1px solid var(--border);position:relative;overflow:hidden;
+}
+.hero-banner::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 70% 50%,rgba(29,242,138,.15) 0%,transparent 60%);
+}
+.hero-tag{
+  display:inline-block;background:var(--accent);color:#000;
+  font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;
+  padding:4px 10px;border-radius:999px;margin-bottom:14px;
+}
+.hero-banner h1{
+  font-family:var(--font-display);font-size:38px;font-weight:800;
+  line-height:1.1;margin-bottom:10px;position:relative;
+}
+.hero-banner p{color:rgba(255,255,255,.5);font-size:14px;margin-bottom:22px;position:relative}
+.hero-actions{display:flex;gap:12px;position:relative}
+.btn-hero{
+  padding:12px 28px;border-radius:999px;font-size:14px;font-weight:700;
+  font-family:var(--font-display);transition:opacity var(--transition),transform var(--transition);
+}
+.btn-hero:hover{opacity:.85;transform:translateY(-2px)}
+.btn-hero.primary{background:var(--accent);color:#000}
+.btn-hero.secondary{background:rgba(255,255,255,.1);color:#fff;border:1.5px solid rgba(255,255,255,.15)}
+
+/* ─── SONGS TABLE ───────────────────────────────────────────── */
+.songs-table{width:100%;border-collapse:collapse;margin-bottom:36px}
+.songs-table th{
+  text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.07em;color:var(--text3);padding:0 12px 12px;
+  border-bottom:1px solid var(--border);
+}
+.songs-table td{padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.03);font-size:14px}
+.songs-table tr:hover td{background:var(--bg3)}
+.song-row{cursor:pointer}
+.song-num{color:var(--text3);font-size:13px;width:30px}
+.song-row:hover .song-num{display:none}
+.song-play-mini{display:none;font-size:14px;color:var(--text)}
+.song-row:hover .song-play-mini{display:block}
+.song-title-cell{display:flex;align-items:center;gap:12px}
+.song-mini-thumb{
+  width:40px;height:40px;border-radius:8px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:18px;
+}
+.song-name{font-weight:500;font-size:14px}
+.song-artist{font-size:12px;color:var(--text2);margin-top:1px}
+.song-streams{color:var(--text2);font-size:13px;font-variant-numeric:tabular-nums}
+.song-duration{color:var(--text2);font-size:13px;font-variant-numeric:tabular-nums}
+.playing-indicator{
+  display:flex;gap:3px;align-items:flex-end;height:16px;
+}
+.bar{width:3px;background:var(--accent);border-radius:2px;animation:bar-bounce 1s ease-in-out infinite}
+.bar:nth-child(1){height:8px;animation-delay:0s}
+.bar:nth-child(2){height:14px;animation-delay:.15s}
+.bar:nth-child(3){height:6px;animation-delay:.3s}
+@keyframes bar-bounce{0%,100%{transform:scaleY(1)}50%{transform:scaleY(1.6)}}
+
+/* ─── ARTIST PROFILE ────────────────────────────────────────── */
+#view-artist .artist-header{
+  background:linear-gradient(180deg,rgba(29,242,138,.15) 0%,transparent 100%);
+  border-radius:20px;padding:36px;margin-bottom:28px;
+  display:flex;align-items:flex-end;gap:28px;
+  border:1px solid var(--border);
+}
+.artist-avatar{
+  width:130px;height:130px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,var(--accent),var(--accent3));
+  display:flex;align-items:center;justify-content:center;font-size:54px;
+  box-shadow:0 0 40px rgba(29,242,138,.3);
+}
+.artist-info .artist-verified{
+  display:flex;align-items:center;gap:6px;
+  font-size:12px;color:var(--accent3);font-weight:600;margin-bottom:8px;
+}
+.artist-info h1{font-family:var(--font-display);font-size:48px;font-weight:800;line-height:1;margin-bottom:10px}
+.artist-stats{display:flex;gap:28px;margin-top:12px}
+.astat{text-align:center}
+.astat-val{font-family:var(--font-display);font-size:22px;font-weight:700;color:var(--accent)}
+.astat-label{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-top:2px}
+.artist-actions{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap}
+.btn-follow{
+  padding:10px 28px;border-radius:999px;font-size:14px;font-weight:700;
+  border:2px solid var(--text);color:var(--text);background:none;
+  transition:background var(--transition),border-color var(--transition),color var(--transition);
+}
+.btn-follow:hover,.btn-follow.following{background:var(--text);color:var(--bg)}
+.btn-play-lg{
+  width:52px;height:52px;border-radius:50%;background:var(--accent);color:#000;
+  display:flex;align-items:center;justify-content:center;font-size:22px;
+  transition:transform var(--transition),opacity var(--transition);
+}
+.btn-play-lg:hover{transform:scale(1.06);opacity:.9}
+
+/* ─── PREMIUM PAGE ──────────────────────────────────────────── */
+#view-premium{max-width:900px;margin:0 auto}
+.premium-hero{
+  text-align:center;padding:48px 20px 36px;
+  background:linear-gradient(135deg,#0e1e14,#0d0d1e);
+  border-radius:20px;margin-bottom:36px;border:1px solid var(--border);
+  position:relative;overflow:hidden;
+}
+.premium-hero::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 50% 0%,rgba(29,242,138,.12) 0%,transparent 60%);
+}
+.premium-hero h1{font-family:var(--font-display);font-size:42px;font-weight:800;margin-bottom:10px;position:relative}
+.premium-hero p{color:var(--text2);font-size:16px;position:relative}
+.plans-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:36px}
+.plan-card{
+  background:var(--card);border:1.5px solid var(--border);border-radius:20px;
+  padding:30px;cursor:pointer;transition:border-color var(--transition),transform var(--transition);
+  position:relative;overflow:hidden;
+}
+.plan-card:hover{border-color:var(--accent);transform:translateY(-4px)}
+.plan-card.featured{border-color:var(--accent);background:linear-gradient(135deg,rgba(29,242,138,.07),rgba(93,155,255,.05))}
+.plan-badge{
+  position:absolute;top:16px;right:16px;
+  background:var(--accent);color:#000;
+  font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;
+  padding:4px 10px;border-radius:999px;
+}
+.plan-name{font-family:var(--font-display);font-size:20px;font-weight:700;margin-bottom:6px}
+.plan-price{font-family:var(--font-display);font-size:38px;font-weight:800;margin-bottom:4px}
+.plan-price span{font-size:16px;font-weight:400;color:var(--text2)}
+.plan-period{font-size:13px;color:var(--text2);margin-bottom:20px}
+.plan-features{margin-bottom:24px}
+.plan-feature{
+  display:flex;align-items:center;gap:10px;
+  font-size:14px;color:var(--text2);padding:7px 0;
+  border-bottom:1px solid var(--border);
+}
+.plan-feature:last-child{border:none}
+.feat-check{color:var(--accent);font-size:15px;flex-shrink:0}
+.feat-x{color:var(--text3);font-size:15px;flex-shrink:0}
+.btn-plan{
+  width:100%;padding:13px;border-radius:var(--radius);font-size:14px;font-weight:700;
+  font-family:var(--font-display);transition:opacity var(--transition),transform var(--transition);
+}
+.btn-plan:hover{opacity:.88;transform:translateY(-1px)}
+.btn-plan.primary{background:var(--accent);color:#000}
+.btn-plan.secondary{background:var(--bg3);color:var(--text);border:1.5px solid var(--border)}
+
+/* ─── SETTINGS ──────────────────────────────────────────────── */
+#view-settings h2{font-family:var(--font-display);font-size:28px;font-weight:700;margin-bottom:28px}
+.settings-section{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:20px;overflow:hidden}
+.settings-section-head{
+  padding:18px 22px;border-bottom:1px solid var(--border);
+  font-family:var(--font-display);font-size:15px;font-weight:700;
+}
+.settings-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 22px;border-bottom:1px solid rgba(255,255,255,.03);
+}
+.settings-row:last-child{border:none}
+.settings-row-left .sr-label{font-size:14px;font-weight:500}
+.settings-row-left .sr-desc{font-size:12px;color:var(--text2);margin-top:2px}
+.toggle{
+  width:44px;height:24px;border-radius:999px;background:var(--bg4);
+  position:relative;cursor:pointer;border:1.5px solid var(--border);
+  transition:background var(--transition);flex-shrink:0;
+}
+.toggle.on{background:var(--accent);border-color:var(--accent)}
+.toggle-knob{
+  width:18px;height:18px;border-radius:50%;background:#fff;
+  position:absolute;top:1px;left:1px;
+  transition:transform var(--transition);box-shadow:0 1px 4px rgba(0,0,0,.3);
+}
+.toggle.on .toggle-knob{transform:translateX(20px)}
+.select-input{
+  background:var(--bg3);border:1.5px solid var(--border);
+  color:var(--text);border-radius:8px;padding:7px 12px;
+  font-size:13px;font-family:inherit;cursor:pointer;
+  transition:border-color var(--transition);
+}
+.select-input:focus{border-color:var(--accent)}
+.danger-btn{
+  padding:9px 18px;background:rgba(255,80,80,.1);
+  color:#FF5050;border-radius:var(--radius);font-size:13px;font-weight:600;
+  border:1.5px solid rgba(255,80,80,.2);
+  transition:background var(--transition);
+}
+.danger-btn:hover{background:rgba(255,80,80,.2)}
+
+/* ─── STATS CHART ───────────────────────────────────────────── */
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:28px}
+.stat-card{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;
+}
+.stat-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text3);margin-bottom:10px}
+.stat-value{font-family:var(--font-display);font-size:28px;font-weight:800}
+.stat-value.accent{color:var(--accent)}
+.stat-value.accent2{color:var(--accent2)}
+.stat-value.accent3{color:var(--accent3)}
+.stat-delta{font-size:12px;color:var(--accent);margin-top:4px;display:flex;align-items:center;gap:4px}
+.delta-down{color:#FF5050}
+
+.mini-chart{display:flex;align-items:flex-end;gap:4px;height:40px;margin-top:10px}
+.mini-bar{
+  flex:1;border-radius:3px 3px 0 0;
+  background:linear-gradient(180deg,var(--accent) 0%,rgba(29,242,138,.3) 100%);
+  transition:height .3s;
+}
+
+/* ─── NOTIFICATION DOTS ─────────────────────────────────────── */
+.badge{
+  display:inline-block;background:var(--accent2);color:#fff;
+  font-size:10px;font-weight:700;border-radius:999px;
+  padding:1px 6px;margin-left:6px;
+}
+
+/* ─── FEATURED ROW ──────────────────────────────────────────── */
+.featured-row{display:flex;gap:12px;overflow-x:auto;padding-bottom:8px;margin-bottom:36px;scrollbar-width:none}
+.featured-row::-webkit-scrollbar{display:none}
+.feat-chip{
+  display:flex;align-items:center;gap:10px;
+  background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+  padding:10px 16px;cursor:pointer;white-space:nowrap;flex-shrink:0;
+  transition:border-color var(--transition),background var(--transition);
+}
+.feat-chip:hover{border-color:var(--accent);background:var(--bg3)}
+.feat-chip.active{border-color:var(--accent);background:rgba(29,242,138,.08)}
+.chip-icon{font-size:20px}
+.chip-label{font-size:13px;font-weight:600}
+
+/* ─── GRADIENTS FOR CARD THUMBS ─────────────────────────────── */
+.g1{background:linear-gradient(135deg,#1DF28A33,#5D9BFF33)}
+.g2{background:linear-gradient(135deg,#FF5DCD33,#FF944D33)}
+.g3{background:linear-gradient(135deg,#5D9BFF33,#9B59B633)}
+.g4{background:linear-gradient(135deg,#FFD70033,#FF5DCD33)}
+.g5{background:linear-gradient(135deg,#1DF28A33,#FFD70033)}
+.g6{background:linear-gradient(135deg,#FF5DCD33,#5D9BFF33)}
+
+/* ─── UTILITIES ─────────────────────────────────────────────── */
+.mb20{margin-bottom:20px}
+.mb36{margin-bottom:36px}
+.flex-gap8{display:flex;gap:8px}
+.hidden{display:none!important}
+
+/* ─── SCROLLBAR STYLES ──────────────────────────────────────── */
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:999px}
+::-webkit-scrollbar-thumb:hover{background:var(--text3)}
+
+/* ─── ANIMATIONS ────────────────────────────────────────────── */
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.view.active{animation:fadeIn .25s ease}
+
+/* ─── RESPONSIVE TWEAKS ─────────────────────────────────────── */
+@media(max-width:768px){
+  .login-art{display:none}
+  .login-form-wrap{width:100%}
+  .sidebar{display:none}
+  .plans-grid{grid-template-columns:1fr}
+  .stats-grid{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!--  LOGIN PAGE                                                  -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div id="page-login" class="page active">
+  <div class="login-art">
+    <div class="orbs">
+      <div class="orb"></div>
+      <div class="orb"></div>
+      <div class="orb"></div>
+    </div>
+    <div class="login-art-inner">
+      <div class="big-logo">SoundWave</div>
+      <div class="tagline">Music flows through everything</div>
+      <div style="margin-top:48px;display:flex;flex-direction:column;gap:14px;align-items:center">
+        <div style="display:flex;gap:-10px">
+          <div style="width:48px;height:48px;border-radius:50%;border:3px solid rgba(255,255,255,.15);background:linear-gradient(135deg,#FF5DCD,#FF944D);display:flex;align-items:center;justify-content:center;font-size:20px">🎸</div>
+          <div style="width:48px;height:48px;border-radius:50%;border:3px solid rgba(255,255,255,.15);background:linear-gradient(135deg,#1DF28A,#5D9BFF);display:flex;align-items:center;justify-content:center;font-size:20px;margin-left:-12px">🎤</div>
+          <div style="width:48px;height:48px;border-radius:50%;border:3px solid rgba(255,255,255,.15);background:linear-gradient(135deg,#FFD700,#FF5DCD);display:flex;align-items:center;justify-content:center;font-size:20px;margin-left:-12px">🎹</div>
+          <div style="width:48px;height:48px;border-radius:50%;border:3px solid rgba(255,255,255,.15);background:linear-gradient(135deg,#5D9BFF,#9B59B6);display:flex;align-items:center;justify-content:center;font-size:20px;margin-left:-12px">🥁</div>
+        </div>
+        <p style="font-size:13px;color:rgba(255,255,255,.35)">Join 80M+ music lovers</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="login-form-wrap">
+    <h2>Welcome back</h2>
+    <p class="sub">Sign in to continue your music journey</p>
+
+    <button class="social-btn">
+      <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+      Continue with Google
+    </button>
+    <button class="social-btn">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--text)"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+      Continue with GitHub
+    </button>
+    <button class="social-btn">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="#1877F2"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+      Continue with Facebook
+    </button>
+
+    <div class="divider">or sign in with email</div>
+
+    <div class="field">
+      <label>Email address</label>
+      <input type="email" placeholder="you@example.com">
+    </div>
+    <div class="field">
+      <label>Password</label>
+      <input type="password" placeholder="••••••••">
+    </div>
+
+    <button class="btn-primary" onclick="showApp()">Sign In →</button>
+
+    <div class="login-footer">
+      Don't have an account? <a href="#" onclick="showApp()">Sign up free</a>
+      <br><br>
+      <a href="#" style="color:var(--text3)">Forgot password?</a>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!--  MAIN APP                                                     -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div id="page-app" class="page">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="nav-arrows">
+        <div class="arrow-btn">‹</div>
+        <div class="arrow-btn">›</div>
+      </div>
+      <div class="search-bar">
+        <span style="color:var(--text3)">🔍</span>
+        <input type="text" placeholder="Search songs, artists, podcasts…">
+      </div>
+    </div>
+    <div class="topbar-right">
+      <div class="theme-toggle" onclick="toggleTheme()" title="Toggle theme" id="themeBtn">🌙</div>
+      <button class="upgrade-btn" onclick="showView('premium')">✦ Upgrade</button>
+      <div class="avatar" onclick="showView('settings')">AJ</div>
+    </div>
+  </div>
+
+  <!-- APP WRAP -->
+  <div class="app-wrap">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <div class="sidebar-logo">SoundWave</div>
+
+      <div class="nav-section">
+        <div class="nav-label">Browse</div>
+        <div class="nav-item active" onclick="switchNav(this,'home')"><span class="nav-icon">🏠</span>Home</div>
+        <div class="nav-item" onclick="switchNav(this,'search')"><span class="nav-icon">🔍</span>Search</div>
+        <div class="nav-item" onclick="switchNav(this,'trending')"><span class="nav-icon">🔥</span>Trending</div>
+        <div class="nav-item" onclick="switchNav(this,'radio')"><span class="nav-icon">📻</span>Radio</div>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-label">Library</div>
+        <div class="nav-item" onclick="switchNav(this,'liked')"><span class="nav-icon">💚</span>Liked Songs <span class="badge">43</span></div>
+        <div class="nav-item" onclick="switchNav(this,'artist')"><span class="nav-icon">🎤</span>Artist Profile</div>
+        <div class="nav-item" onclick="switchNav(this,'premium')"><span class="nav-icon">✦</span>Premium</div>
+        <div class="nav-item" onclick="switchNav(this,'settings')"><span class="nav-icon">⚙</span>Settings</div>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-label">Playlists</div>
+        <div class="playlist-item">
+          <div class="playlist-thumb g1">🎵</div>
+          <div class="playlist-info"><div class="p-name">Morning Vibes</div><div class="p-count">24 songs</div></div>
+        </div>
+        <div class="playlist-item">
+          <div class="playlist-thumb g2">🔥</div>
+          <div class="playlist-info"><div class="p-name">Late Night Drive</div><div class="p-count">18 songs</div></div>
+        </div>
+        <div class="playlist-item">
+          <div class="playlist-thumb g3">💜</div>
+          <div class="playlist-info"><div class="p-name">Lo-fi Chill</div><div class="p-count">31 songs</div></div>
+        </div>
+        <div class="playlist-item">
+          <div class="playlist-thumb g4">⚡</div>
+          <div class="playlist-info"><div class="p-name">Workout Beast</div><div class="p-count">15 songs</div></div>
+        </div>
+        <div class="playlist-item">
+          <div class="playlist-thumb g5">🌅</div>
+          <div class="playlist-info"><div class="p-name">Sunday Soul</div><div class="p-count">28 songs</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+
+      <!-- ─── HOME ─────────────────────────────────────────── -->
+      <div id="view-home" class="view active">
+        <div class="hero-banner">
+          <div class="hero-tag">✦ New Release</div>
+          <h1>Midnight<br>Frequencies</h1>
+          <p>The latest album from Nova Blackwell — available now</p>
+          <div class="hero-actions">
+            <button class="btn-hero primary">▶ Play Now</button>
+            <button class="btn-hero secondary">+ Add to Library</button>
+          </div>
+        </div>
+
+        <div class="featured-row">
+          <div class="feat-chip active"><span class="chip-icon">🎵</span><span class="chip-label">All</span></div>
+          <div class="feat-chip"><span class="chip-icon">🎸</span><span class="chip-label">Rock</span></div>
+          <div class="feat-chip"><span class="chip-icon">🎷</span><span class="chip-label">Jazz</span></div>
+          <div class="feat-chip"><span class="chip-icon">🎹</span><span class="chip-label">Electronic</span></div>
+          <div class="feat-chip"><span class="chip-icon">🎤</span><span class="chip-label">Hip-Hop</span></div>
+          <div class="feat-chip"><span class="chip-icon">🌊</span><span class="chip-label">Chill</span></div>
+          <div class="feat-chip"><span class="chip-icon">💃</span><span class="chip-label">Afrobeats</span></div>
+          <div class="feat-chip"><span class="chip-icon">🎻</span><span class="chip-label">Classical</span></div>
+        </div>
+
+        <div class="section-head"><h2>Recently Played</h2><span class="see-all">See all</span></div>
+        <div class="card-grid">
+          <div class="card"><div class="card-thumb g1" style="position:relative">🎵<div class="card-play-overlay">▶</div></div><div class="card-title">Neon Pulse</div><div class="card-sub">Nova Blackwell</div></div>
+          <div class="card"><div class="card-thumb g2" style="position:relative">🎤<div class="card-play-overlay">▶</div></div><div class="card-title">Golden Hour</div><div class="card-sub">Ray Santos</div></div>
+          <div class="card"><div class="card-thumb g3" style="position:relative">🎸<div class="card-play-overlay">▶</div></div><div class="card-title">Thunder Road</div><div class="card-sub">The Echoes</div></div>
+          <div class="card"><div class="card-thumb g4" style="position:relative">🥁<div class="card-play-overlay">▶</div></div><div class="card-title">Beat Drop '25</div><div class="card-sub">DJ Voltage</div></div>
+          <div class="card"><div class="card-thumb g5" style="position:relative">🎹<div class="card-play-overlay">▶</div></div><div class="card-title">Ivory Dreams</div><div class="card-sub">Lena Morrow</div></div>
+          <div class="card"><div class="card-thumb g6" style="position:relative">🎷<div class="card-play-overlay">▶</div></div><div class="card-title">Blue Midnight</div><div class="card-sub">Marcus Cole</div></div>
+        </div>
+
+        <div class="section-head"><h2>Trending Now 🔥</h2><span class="see-all">See all</span></div>
+        <div class="card-grid">
+          <div class="card"><div class="card-thumb g2" style="position:relative">🌊<div class="card-play-overlay">▶</div></div><div class="card-title">Lagos Nights</div><div class="card-sub">Afrowave</div></div>
+          <div class="card"><div class="card-thumb g4" style="position:relative">⚡<div class="card-play-overlay">▶</div></div><div class="card-title">Static Youth</div><div class="card-sub">Pixel Fox</div></div>
+          <div class="card"><div class="card-thumb g1" style="position:relative">🎻<div class="card-play-overlay">▶</div></div><div class="card-title">Strings Attached</div><div class="card-sub">Vienna Collective</div></div>
+          <div class="card"><div class="card-thumb g6" style="position:relative">🎵<div class="card-play-overlay">▶</div></div><div class="card-title">Cloud 9</div><div class="card-sub">Sky Tender</div></div>
+        </div>
+      </div>
+
+      <!-- ─── ARTIST ────────────────────────────────────────── -->
+      <div id="view-artist" class="view">
+        <div class="artist-header">
+          <div class="artist-avatar">🎤</div>
+          <div class="artist-info" style="flex:1">
+            <div class="artist-verified">✦ Verified Artist</div>
+            <h1>Nova Blackwell</h1>
+            <div style="color:var(--text2);font-size:14px">Electronic · Alternative · Dream Pop</div>
+            <div class="artist-stats">
+              <div class="astat"><div class="astat-val">8.4M</div><div class="astat-label">Monthly Listeners</div></div>
+              <div class="astat"><div class="astat-val">2.1M</div><div class="astat-label">Followers</div></div>
+              <div class="astat"><div class="astat-val">47</div><div class="astat-label">Tracks</div></div>
+              <div class="astat"><div class="astat-val">12</div><div class="astat-label">Albums</div></div>
+            </div>
+            <div class="artist-actions">
+              <button class="btn-play-lg">▶</button>
+              <button class="btn-follow" id="followBtn" onclick="toggleFollow()">Follow</button>
+              <button style="background:none;border:1.5px solid var(--border);color:var(--text2);border-radius:999px;padding:10px 18px;font-size:13px;cursor:pointer">• • •</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Listener Stats -->
+        <div class="stats-grid mb36">
+          <div class="stat-card">
+            <div class="stat-label">Monthly Listeners</div>
+            <div class="stat-value accent">8.4M</div>
+            <div class="stat-delta">↑ +12.3% this month</div>
+            <div class="mini-chart">
+              <div class="mini-bar" style="height:55%"></div>
+              <div class="mini-bar" style="height:40%"></div>
+              <div class="mini-bar" style="height:70%"></div>
+              <div class="mini-bar" style="height:60%"></div>
+              <div class="mini-bar" style="height:85%"></div>
+              <div class="mini-bar" style="height:75%"></div>
+              <div class="mini-bar" style="height:100%"></div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Followers</div>
+            <div class="stat-value accent2">2.1M</div>
+            <div class="stat-delta">↑ +8.7% this month</div>
+            <div class="mini-chart">
+              <div class="mini-bar" style="height:50%;background:linear-gradient(180deg,var(--accent2),rgba(255,93,205,.3))"></div>
+              <div class="mini-bar" style="height:60%;background:linear-gradient(180deg,var(--accent2),rgba(255,93,205,.3))"></div>
+              <div class="mini-bar" style="height:55%;background:linear-gradient(180deg,var(--accent2),rgba(255,93,205,.3))"></div>
+              <div class="mini-bar" style="height:80%;background:linear-gradient(180deg,var(--accent2),rgba(255,93,205,.3))"></div>
+              <div class="mini-bar" style="height:70%;background:linear-gradient(180deg,var(--accent2),rgba(255,93,205,.3))"></div>
+              <div class="mini-bar" style="height:90%;background:linear-gradient(180deg,var(--accent2),rgba(255,93,205,.3))"></div>
+              <div class="mini-bar" style="height:100%;background:linear-gradient(180deg,var(--accent2),rgba(255,93,205,.3))"></div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Total Streams</div>
+            <div class="stat-value accent3">142M</div>
+            <div class="stat-delta">↑ +4.1% this month</div>
+            <div class="mini-chart">
+              <div class="mini-bar" style="height:45%;background:linear-gradient(180deg,var(--accent3),rgba(93,155,255,.3))"></div>
+              <div class="mini-bar" style="height:65%;background:linear-gradient(180deg,var(--accent3),rgba(93,155,255,.3))"></div>
+              <div class="mini-bar" style="height:58%;background:linear-gradient(180deg,var(--accent3),rgba(93,155,255,.3))"></div>
+              <div class="mini-bar" style="height:72%;background:linear-gradient(180deg,var(--accent3),rgba(93,155,255,.3))"></div>
+              <div class="mini-bar" style="height:88%;background:linear-gradient(180deg,var(--accent3),rgba(93,155,255,.3))"></div>
+              <div class="mini-bar" style="height:80%;background:linear-gradient(180deg,var(--accent3),rgba(93,155,255,.3))"></div>
+              <div class="mini-bar" style="height:100%;background:linear-gradient(180deg,var(--accent3),rgba(93,155,255,.3))"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Top Songs -->
+        <div class="section-head"><h2>Top Songs</h2></div>
+        <table class="songs-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Title</th>
+              <th>Album</th>
+              <th>Streams</th>
+              <th>Duration</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="song-row" onclick="playSong(this)">
+              <td>
+                <span class="song-num">1</span>
+                <span class="song-play-mini">▶</span>
+              </td>
+              <td>
+                <div class="song-title-cell">
+                  <div class="song-mini-thumb g1">🎵</div>
+                  <div><div class="song-name">Neon Pulse</div><div class="song-artist">Nova Blackwell</div></div>
+                </div>
+              </td>
+              <td style="color:var(--text2);font-size:13px">Midnight Frequencies</td>
+              <td><span class="song-streams">24,812,441</span></td>
+              <td><span class="song-duration">3:42</span></td>
+            </tr>
+            <tr class="song-row">
+              <td><span class="song-num">2</span><span class="song-play-mini">▶</span></td>
+              <td><div class="song-title-cell"><div class="song-mini-thumb g3">💜</div><div><div class="song-name">Ultraviolet</div><div class="song-artist">Nova Blackwell</div></div></div></td>
+              <td style="color:var(--text2);font-size:13px">Neon Skies</td>
+              <td><span class="song-streams">18,334,200</span></td>
+              <td><span class="song-duration">4:11</span></td>
+            </tr>
+            <tr class="song-row" id="playingRow">
+              <td><div class="playing-indicator"><div class="bar"></div><div class="bar"></div><div class="bar"></div></div></td>
+              <td><div class="song-title-cell"><div class="song-mini-thumb g2">🌊</div><div><div class="song-name" style="color:var(--accent)">Coastal Dream</div><div class="song-artist">Nova Blackwell</div></div></div></td>
+              <td style="color:var(--text2);font-size:13px">Midnight Frequencies</td>
+              <td><span class="song-streams">15,902,811</span></td>
+              <td><span class="song-duration">3:58</span></td>
+            </tr>
+            <tr class="song-row">
+              <td><span class="song-num">4</span><span class="song-play-mini">▶</span></td>
+              <td><div class="song-title-cell"><div class="song-mini-thumb g5">⭐</div><div><div class="song-name">Starfall</div><div class="song-artist">Nova Blackwell</div></div></div></td>
+              <td style="color:var(--text2);font-size:13px">Early Works</td>
+              <td><span class="song-streams">12,441,089</span></td>
+              <td><span class="song-duration">5:02</span></td>
+            </tr>
+            <tr class="song-row">
+              <td><span class="song-num">5</span><span class="song-play-mini">▶</span></td>
+              <td><div class="song-title-cell"><div class="song-mini-thumb g4">🔥</div><div><div class="song-name">Ghost Signal</div><div class="song-artist">Nova Blackwell</div></div></div></td>
+              <td style="color:var(--text2);font-size:13px">Neon Skies</td>
+              <td><span class="song-streams">9,003,714</span></td>
+              <td><span class="song-duration">3:27</span></td>
+            </tr>
+            <tr class="song-row">
+              <td><span class="song-num">6</span><span class="song-play-mini">▶</span></td>
+              <td><div class="song-title-cell"><div class="song-mini-thumb g6">🎸</div><div><div class="song-name">Electric City</div><div class="song-artist">Nova Blackwell</div></div></div></td>
+              <td style="color:var(--text2);font-size:13px">Midnight Frequencies</td>
+              <td><span class="song-streams">7,812,302</span></td>
+              <td><span class="song-duration">4:33</span></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Albums -->
+        <div class="section-head"><h2>Discography</h2><span class="see-all">See all</span></div>
+        <div class="card-grid">
+          <div class="card"><div class="card-thumb g1" style="position:relative">🌌<div class="card-play-overlay">▶</div></div><div class="card-title">Midnight Frequencies</div><div class="card-sub">2025 · Album</div></div>
+          <div class="card"><div class="card-thumb g3" style="position:relative">✨<div class="card-play-overlay">▶</div></div><div class="card-title">Neon Skies</div><div class="card-sub">2023 · Album</div></div>
+          <div class="card"><div class="card-thumb g2" style="position:relative">🌊<div class="card-play-overlay">▶</div></div><div class="card-title">Early Works</div><div class="card-sub">2021 · Album</div></div>
+          <div class="card"><div class="card-thumb g5" style="position:relative">💫<div class="card-play-overlay">▶</div></div><div class="card-title">Signal Lost EP</div><div class="card-sub">2020 · EP</div></div>
+        </div>
+      </div>
+
+      <!-- ─── PREMIUM ───────────────────────────────────────── -->
+      <div id="view-premium" class="view">
+        <div id="view-premium-inner">
+        <div class="premium-hero">
+          <h1>Music without limits</h1>
+          <p>Choose the plan that moves you</p>
+        </div>
+
+        <div class="plans-grid">
+          <!-- FREE -->
+          <div class="plan-card">
+            <div class="plan-name">Free</div>
+            <div class="plan-price">$0 <span>/ month</span></div>
+            <div class="plan-period">Forever free, always</div>
+            <div class="plan-features">
+              <div class="plan-feature"><span class="feat-check">✓</span> Ad-supported listening</div>
+              <div class="plan-feature"><span class="feat-check">✓</span> Shuffle play on mobile</div>
+              <div class="plan-feature"><span class="feat-check">✓</span> Limited skips (6/hour)</div>
+              <div class="plan-feature"><span class="feat-x">✕</span> Offline listening</div>
+              <div class="plan-feature"><span class="feat-x">✕</span> HD audio quality</div>
+              <div class="plan-feature"><span class="feat-x">✕</span> Unlimited skips</div>
+              <div class="plan-feature"><span class="feat-x">✕</span> Background play</div>
+            </div>
+            <button class="btn-plan secondary" onclick="selectPlan('free')">Current Plan</button>
+          </div>
+
+          <!-- PREMIUM -->
+          <div class="plan-card featured">
+            <div class="plan-badge">Most Popular</div>
+            <div class="plan-name">Premium</div>
+            <div class="plan-price">$9.99 <span>/ month</span></div>
+            <div class="plan-period">Cancel anytime · Free 1-month trial</div>
+            <div class="plan-features">
+              <div class="plan-feature"><span class="feat-check">✓</span> Ad-free music</div>
+              <div class="plan-feature"><span class="feat-check">✓</span> Offline downloads (up to 10k songs)</div>
+              <div class="plan-feature"><span class="feat-check">✓</span> Ultra HD audio (up to 320kbps)</div>
+              <div class="plan-feature"><span class="feat-check">✓</span> Unlimited skips</div>
+              <div class="plan-feature"><span class="feat-check">✓</span> Background play</div>
+              <div class="plan-feature"><span class="feat-check">✓</span> Group Session (listen with friends)</div>
+              <div class="plan-feature"><span class="feat-check">✓</span> AI DJ & personalized mixes</div>
+            </div>
+            <button class="btn-plan primary" onclick="selectPlan('premium')">Start Free Trial →</button>
+          </div>
+        </div>
+
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:20px;padding:28px;margin-bottom:24px">
+          <h3 style="font-family:var(--font-display);font-size:18px;margin-bottom:16px">✦ Premium also includes</h3>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px">
+            <div style="text-align:center;padding:20px;background:var(--bg3);border-radius:var(--radius)">
+              <div style="font-size:32px;margin-bottom:8px">🎵</div>
+              <div style="font-size:13px;font-weight:600;margin-bottom:4px">Lossless Audio</div>
+              <div style="font-size:12px;color:var(--text2)">Studio-quality sound exactly as the artist intended</div>
+            </div>
+            <div style="text-align:center;padding:20px;background:var(--bg3);border-radius:var(--radius)">
+              <div style="font-size:32px;margin-bottom:8px">🤖</div>
+              <div style="font-size:13px;font-weight:600;margin-bottom:4px">AI DJ</div>
+              <div style="font-size:12px;color:var(--text2)">Personalized mixes powered by your listening habits</div>
+            </div>
+            <div style="text-align:center;padding:20px;background:var(--bg3);border-radius:var(--radius)">
+              <div style="font-size:32px;margin-bottom:8px">👥</div>
+              <div style="font-size:13px;font-weight:600;margin-bottom:4px">Group Session</div>
+              <div style="font-size:12px;color:var(--text2)">Listen in sync with up to 5 friends remotely</div>
+            </div>
+          </div>
+        </div>
+        </div>
+      </div>
+
+      <!-- ─── SETTINGS ──────────────────────────────────────── -->
+      <div id="view-settings" class="view">
+        <h2>Settings</h2>
+
+        <div class="settings-section">
+          <div class="settings-section-head">🎵 Playback</div>
+          <div class="settings-row">
+            <div class="settings-row-left"><div class="sr-label">Audio Quality</div><div class="sr-desc">Set streaming quality</div></div>
+            <select class="select-input"><option>High (320kbps)</option><option>Normal (160kbps)</option><option>Low (96kbps)</option><option>Automatic</option></select>
+          </div>
+          <div class="settings-row">
+            <div class="settings-row-left"><div class="sr-label">Crossfade</div><div class="sr-desc">Smooth transition between songs</div></div>
+            <div class="toggle on" onclick="this.classList.toggle('on')"><div class="toggle-knob"></div></div>
+          </div>
+          <div class="settings-row">
+            <div class="settings-row-left"><div class="sr-label">Normalize Volume</div><div class="sr-desc">Keep volume consistent across tracks</div></div>
+            <div class="toggle on" onclick="this.classList.toggle('on')"><div class="toggle-knob"></div></div>
+          </div>
+          <div class="settings-row">
+            <div class="settings-row-left"><div class="sr-label">Gapless Playback</div><div class="sr-desc">No pause between tracks in an album</div></div>
+            <div class="toggle" onclick="this.classList.toggle('on')"><div class="toggle-knob"></div></div>
+          </div>
+          <div class="settings-row">
+            <div class="settings-row-left"><div class="sr-label">AutoPlay</div><div class="sr-desc">Keep playing after queue ends</div></div>
+            <div class="toggle on" onclick="this.classList.toggle('on')"><div class="toggle-knob"></div></div>
+          </div>
+        </div>
+
+        <div class="settings-section">
+          <div class="settings-section-head">🖥 Display</div>
+          <div class="settings-row">
+            <div class="settings-row-left"><div class="sr-label">Theme</div><div class="sr-desc">Choose app appearance</div></div>
+            <select class="select-input" onchange="setTheme(this.value)">
+              <option value="dark">Dark</option>
+              <option value="light">Light</option>
+            </select>
+          </div>
+          <div class="settings-row">
+            <div class="settings-row-left"><div class="sr-label">Show Now Playing</div><div class="sr-desc">Display current track info in the title bar</div></div>
+            <div class="toggle on" onclick="this.classList.toggle('on')"><div class="toggle-knob"></div></div>
+          </div>
+          <div class="settings-row">
+            <div class="settings-row-left"><div class="sr-label">Show Artist Canvas</div><div class="sr-desc">Animated visuals on player screen</div></div>
+            <div class="toggle on" onclick="this.classList.toggle('on')"><div class="toggle-knob"></div></div>
+          </div>
+          <div class="settings-row">
+            <div class="settings-row-left"><div class="sr-label">Language</div></div>
+            <select class="select-input"><option>English</option><option>Français</option><option>Español</option><option>Deutsch</option><option>Português</option></select>
+          </div>
+        </div>
+
+        <div class="settings-section">
+          <div class="settings-section-head">🔔 Notifications</div>
+          <div class="settings-row">
+            <div class="settings-row-left"><div class="sr-label">New Releases</div><div class="sr-desc">Notify when followed artists release music</div></div>
+            <div class="toggle on" onclick="this.classList.toggle('on')"><div class="toggle-knob"></div></div>
+          </div>
+          <div class="settings-row">
+            <div class="settings-row-left"><div class="sr-label">Playlist Updates</div><div class="sr-desc">Notify when collaborative playlists change</div></div>
+            <div class="toggle" onclick="this.classList.toggle('on')"><div class="toggle-knob"></div></div>
+          </div>
+          <div class="settings-row">
+            <div class="settings-row-left"><div class="sr-label">Friend Activity</div><div class="sr-desc">See what your friends are listening to</div></div>
+            <div class="toggle on" onclick="this.classList.toggle('on')"><div class="toggle-knob"></div></div>
+          </div>
+        </div>
+
+        <div class="settings-section">
+          <div class="settings-section-head">🔒 Privacy & Account</div>
+          <div class="settings-row">
+            <div class="settings-row-left"><div class="sr-label">Private Session</div><div class="sr-desc">Listen without updating your history</div></div>
+            <div class="toggle" onclick="this.classList.toggle('on')"><div class="toggle-knob"></div></div>
+          </div>
+          <div class="settings-row">
+            <div class="settings-row-left"><div class="sr-label">Data Saver</div><div class="sr-desc">Reduce data usage on mobile</div></div>
+            <div class="toggle" onclick="this.classList.toggle('on')"><div class="toggle-knob"></div></div>
+          </div>
+          <div class="settings-row">
+            <div class="settings-row-left"><div class="sr-label">Download Storage</div></div>
+            <select class="select-input"><option>Internal Storage</option><option>SD Card</option></select>
+          </div>
+        </div>
+
+        <div class="settings-section">
+          <div class="settings-section-head">⚠ Danger Zone</div>
+          <div class="settings-row">
+            <div class="settings-row-left"><div class="sr-label">Clear Cache</div><div class="sr-desc">Free up space by clearing cached data</div></div>
+            <button class="danger-btn">Clear Cache</button>
+          </div>
+          <div class="settings-row">
+            <div class="settings-row-left"><div class="sr-label">Sign Out</div><div class="sr-desc">Sign out of your account</div></div>
+            <button class="danger-btn" onclick="showPage('login')">Sign Out</button>
+          </div>
+          <div class="settings-row">
+            <div class="settings-row-left"><div class="sr-label">Delete Account</div><div class="sr-desc">Permanently remove your account and data</div></div>
+            <button class="danger-btn">Delete Account</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── SEARCH (placeholder) ──────────────────────────── -->
+      <div id="view-search" class="view">
+        <div class="section-head"><h2>Browse Categories</h2></div>
+        <div class="card-grid">
+          <div class="card"><div class="card-thumb g1" style="position:relative">🔥<div class="card-play-overlay">▶</div></div><div class="card-title">Hot Right Now</div></div>
+          <div class="card"><div class="card-thumb g2" style="position:relative">🎸<div class="card-play-overlay">▶</div></div><div class="card-title">Rock Classics</div></div>
+          <div class="card"><div class="card-thumb g3" style="position:relative">💃<div class="card-play-overlay">▶</div></div><div class="card-title">Afrobeats</div></div>
+          <div class="card"><div class="card-thumb g4" style="position:relative">🎹<div class="card-play-overlay">▶</div></div><div class="card-title">Electronic</div></div>
+          <div class="card"><div class="card-thumb g5" style="position:relative">🌊<div class="card-play-overlay">▶</div></div><div class="card-title">Chill Vibes</div></div>
+          <div class="card"><div class="card-thumb g6" style="position:relative">🎷<div class="card-play-overlay">▶</div></div><div class="card-title">Jazz & Soul</div></div>
+          <div class="card"><div class="card-thumb g1" style="position:relative">🏋<div class="card-play-overlay">▶</div></div><div class="card-title">Workout</div></div>
+          <div class="card"><div class="card-thumb g4" style="position:relative">😴<div class="card-play-overlay">▶</div></div><div class="card-title">Sleep & Relax</div></div>
+        </div>
+      </div>
+
+      <!-- Liked / Radio / Trending views (simple placeholders) -->
+      <div id="view-liked" class="view">
+        <div class="hero-banner"><div class="hero-tag">💚 Liked Songs</div><h1>Your Liked<br>Songs</h1><p>43 songs you've hearted</p><div class="hero-actions"><button class="btn-hero primary">▶ Shuffle Play</button></div></div>
+        <div class="section-head"><h2>All Liked Songs</h2></div>
+        <table class="songs-table"><thead><tr><th>#</th><th>Title</th><th>Date Added</th><th>Duration</th></tr></thead><tbody>
+          <tr class="song-row"><td><span class="song-num">1</span><span class="song-play-mini">▶</span></td><td><div class="song-title-cell"><div class="song-mini-thumb g1">🎵</div><div><div class="song-name">Neon Pulse</div><div class="song-artist">Nova Blackwell</div></div></div></td><td style="color:var(--text2);font-size:13px">2 days ago</td><td><span class="song-duration">3:42</span></td></tr>
+          <tr class="song-row"><td><span class="song-num">2</span><span class="song-play-mini">▶</span></td><td><div class="song-title-cell"><div class="song-mini-thumb g2">🌊</div><div><div class="song-name">Lagos Nights</div><div class="song-artist">Afrowave</div></div></div></td><td style="color:var(--text2);font-size:13px">1 week ago</td><td><span class="song-duration">4:05</span></td></tr>
+          <tr class="song-row"><td><span class="song-num">3</span><span class="song-play-mini">▶</span></td><td><div class="song-title-cell"><div class="song-mini-thumb g4">⚡</div><div><div class="song-name">Static Youth</div><div class="song-artist">Pixel Fox</div></div></div></td><td style="color:var(--text2);font-size:13px">2 weeks ago</td><td><span class="song-duration">3:19</span></td></tr>
+        </tbody></table>
+      </div>
+      <div id="view-trending" class="view"><div class="hero-banner"><div class="hero-tag">🔥 Trending</div><h1>What's Hot<br>This Week</h1><p>Updated daily</p></div><div class="card-grid"><div class="card"><div class="card-thumb g2" style="position:relative">🌊<div class="card-play-overlay">▶</div></div><div class="card-title">Lagos Nights</div><div class="card-sub">#1 Trending</div></div><div class="card"><div class="card-thumb g4" style="position:relative">⚡<div class="card-play-overlay">▶</div></div><div class="card-title">Static Youth</div><div class="card-sub">#2 Trending</div></div><div class="card"><div class="card-thumb g1" style="position:relative">🎵<div class="card-play-overlay">▶</div></div><div class="card-title">Neon Pulse</div><div class="card-sub">#3 Trending</div></div></div></div>
+      <div id="view-radio" class="view"><div class="hero-banner"><div class="hero-tag">📻 Radio</div><h1>Live Radio<br>Stations</h1><p>Tune in, anywhere</p></div><div class="card-grid"><div class="card"><div class="card-thumb g3" style="position:relative">📻<div class="card-play-overlay">▶</div></div><div class="card-title">Jazz FM</div><div class="card-sub">Live · 24/7</div></div><div class="card"><div class="card-thumb g1" style="position:relative">🎸<div class="card-play-overlay">▶</div></div><div class="card-title">Rock Radio</div><div class="card-sub">Live · 24/7</div></div><div class="card"><div class="card-thumb g5" style="position:relative">💃<div class="card-play-overlay">▶</div></div><div class="card-title">Afro Nation</div><div class="card-sub">Live · 24/7</div></div></div></div>
+
+    </div><!-- /.main-content -->
+  </div><!-- /.app-wrap -->
+
+  <!-- PLAYER BAR -->
+  <div class="player-bar">
+    <div class="now-playing">
+      <div class="np-thumb">🌊</div>
+      <div class="np-info">
+        <div class="np-title">Coastal Dream</div>
+        <div class="np-artist">Nova Blackwell</div>
+      </div>
+      <span class="np-heart liked" onclick="this.classList.toggle('liked')" title="Like">♥</span>
+    </div>
+
+    <div class="player-controls">
+      <div class="ctrl-btns">
+        <button class="ctrl-btn" title="Shuffle">⇌</button>
+        <button class="ctrl-btn" title="Previous">⏮</button>
+        <button class="play-btn" onclick="togglePlay(this)" title="Play/Pause" id="mainPlayBtn">⏸</button>
+        <button class="ctrl-btn" title="Next">⏭</button>
+        <button class="ctrl-btn active" title="Repeat">↻</button>
+      </div>
+      <div class="progress-wrap">
+        <span class="time">1:23</span>
+        <div class="progress-track"><div class="progress-fill"></div></div>
+        <span class="time">3:58</span>
+      </div>
+    </div>
+
+    <div class="player-extra">
+      <button class="ctrl-btn" title="Queue">☰</button>
+      <button class="ctrl-btn" title="Devices">📱</button>
+      <span class="vol-icon">🔊</span>
+      <div class="vol-track"><div class="vol-fill"></div></div>
+    </div>
+  </div>
+
+</div><!-- /#page-app -->
+
+<script>
+// ── NAVIGATION ──────────────────────────────────────────────────────
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+}
+function showApp() {
+  showPage('app');
+  showView('home');
+}
+function showView(id) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  const el = document.getElementById('view-' + id);
+  if (el) el.classList.add('active');
+}
+function switchNav(el, view) {document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+  el.classList.add('active');
+  showView(view);
+}
+
+// ── THEME ────────────────────────────────────────────────────────────
+function toggleTheme() {
+  const html = document.documentElement;
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  document.getElementById('themeBtn').textContent = isDark ? '☀️' : '🌙';
+  const sel = document.querySelector('.select-input');
+}
+function setTheme(val) {
+  document.documentElement.setAttribute('data-theme', val);
+  document.getElementById('themeBtn').textContent = val === 'dark' ? '🌙' : '☀️';
+}
+
+// ── PLAYER ───────────────────────────────────────────────────────────
+let playing = true;
+function togglePlay(btn) {
+  playing = !playing;
+  btn.textContent = playing ? '⏸' : '▶';
+  btn.style.background = playing ? 'var(--accent)' : 'var(--text)';
+}
+function playSong(row) {
+  document.querySelectorAll('.song-row').forEach(r => {
+    r.querySelector('.song-name') && (r.querySelector('.song-name').style.color = '');
+  });
+  if (row.querySelector('.song-name')) row.querySelector('.song-name').style.color = 'var(--accent)';
+}
+
+// ── FOLLOW ───────────────────────────────────────────────────────────
+function toggleFollow() {
+  const btn = document.getElementById('followBtn');
+  const isFollowing = btn.classList.toggle('following');
+  btn.textContent = isFollowing ? 'Following ✓' : 'Follow';
+}
+
+// ── PLAN SELECTION ───────────────────────────────────────────────────
+function selectPlan(plan) {
+  const inner = document.getElementById('view-premium-inner');
+  if (plan === 'premium') {
+    inner.innerHTML = `
+      <div style="max-width:500px;margin:60px auto;text-align:center">
+        <div style="font-size:64px;margin-bottom:20px">✦</div>
+        <h2 style="font-family:var(--font-display);font-size:32px;margin-bottom:10px;color:var(--accent)">You're Premium!</h2>
+        <p style="color:var(--text2);margin-bottom:32px">Your 1-month free trial has started. Enjoy ad-free music, offline listening, and more.</p>
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:24px;text-align:left">
+          <div style="display:flex;justify-content:space-between;margin-bottom:12px"><span style="color:var(--text2)">Plan</span><span style="font-weight:600">Premium</span></div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:12px"><span style="color:var(--text2)">Trial ends</span><span style="font-weight:600">July 3, 2026</span></div>
+          <div style="display:flex;justify-content:space-between"><span style="color:var(--text2)">Renews at</span><span style="font-weight:600">$9.99/month</span></div>
+        </div>
+        <button class="btn-plan primary" style="width:auto;padding:12px 32px" onclick="showView('home')">Start Listening →</button>
+      </div>`;
+  }
+}
+
+// ── GENRE CHIPS ───────────────────────────────────────────────────────
+document.querySelectorAll('.feat-chip').forEach(chip => {
+  chip.addEventListener('click', function() {
+    document.querySelectorAll('.feat-chip').forEach(c => c.classList.remove('active'));
+    this.classList.add('active');
+  });
+});
+</script>
+</body>
+</html>
